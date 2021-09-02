@@ -7,8 +7,9 @@
 
 import Foundation
 import Combine
+import OrderedCollections
 
-public typealias WKHTTPParams = [String: Any]
+public typealias WKHTTPQuery = OrderedDictionary<String, Any>
 public typealias WKHTTPBody = [String: Any]
 public typealias WKHTTPHeaders = [String: String]
 
@@ -35,7 +36,7 @@ public protocol WKRequest {
     var path: String { get }
     var method: WKHTTPMethod { get }
     var contentType: WKHTTPContentType { get }
-    var queryParams: WKHTTPParams? { get }
+    var queryParams: WKHTTPQuery? { get }
     var body: WKHTTPBody? { get }
     var headers: WKHTTPHeaders? { get }
 }
@@ -45,7 +46,7 @@ public extension WKRequest {
     // Defaults
     var method: WKHTTPMethod { return .get }
     var contentType: WKHTTPContentType { return .json }
-    var queryParams: WKHTTPParams? { return nil }
+    var queryParams: WKHTTPQuery? { return nil }
     var body: WKHTTPBody? { return nil }
     var headers: WKHTTPHeaders? { return nil }
     var debug: Bool { return false }
@@ -70,9 +71,8 @@ extension WKRequest {
     /// Generates a URLQueryItems array from a Params dictionary
     /// - Parameter params: HTTP Parameters dictionary
     /// - Returns: An Array of URLQueryItems
-    private func queryItemsFrom(params: WKHTTPParams?) -> [URLQueryItem]? {
-        guard let params = params else { return nil }
-        return params.map {
+    private func queryItemsFrom(params: WKHTTPQuery?) -> [URLQueryItem]? {
+        params?.map {
             URLQueryItem(name: $0.key, value: $0.value as? String)
         }
     }
