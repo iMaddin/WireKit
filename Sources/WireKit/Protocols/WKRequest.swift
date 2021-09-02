@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 public typealias WKHTTPParams = [String: Any]
+public typealias WKHTTPBody = [String: Any]
 public typealias WKHTTPHeaders = [String: String]
 
 public enum WKHTTPContentType: String {
@@ -35,7 +36,7 @@ public protocol WKRequest {
     var method: WKHTTPMethod { get }
     var contentType: WKHTTPContentType { get }
     var queryParams: WKHTTPParams? { get }
-    var body: WKHTTPParams? { get }
+    var body: WKHTTPBody? { get }
     var headers: WKHTTPHeaders? { get }
 }
  
@@ -45,7 +46,7 @@ public extension WKRequest {
     var method: WKHTTPMethod { return .get }
     var contentType: WKHTTPContentType { return .json }
     var queryParams: WKHTTPParams? { return nil }
-    var body: WKHTTPParams? { return nil }
+    var body: WKHTTPBody? { return nil }
     var headers: WKHTTPHeaders? { return nil }
     var debug: Bool { return false }
     
@@ -57,7 +58,7 @@ extension WKRequest {
     /// Serializes an HTTP dictionary to a JSON Data Object
     /// - Parameter params: HTTP Parameters dictionary
     /// - Returns: Encoded JSON
-    private func requestBodyFrom(params: WKHTTPParams?) -> Data? {
+    private func requestBodyFrom(params: WKHTTPBody?) -> Data? {
         guard let params = params else { return nil }
         guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
             return nil
